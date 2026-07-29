@@ -14,7 +14,21 @@
 #sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
 
 # Add a feed source
-echo 'src-git nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git;main' >>feeds.conf.default
-echo 'src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' >>feeds.conf.default
-echo 'src-git passwall2 https://github.com/Openwrt-Passwall/openwrt-passwall2.git;main' >>feeds.conf.default
+# echo 'src-git nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git;main' >>feeds.conf.default
+# echo 'src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' >>feeds.conf.default
+# echo 'src-git passwall2 https://github.com/Openwrt-Passwall/openwrt-passwall2.git;main' >>feeds.conf.default
 #echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
+
+set -e
+
+cat > /tmp/custom-feeds.conf <<'EOF'
+src-git --force nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git;main
+src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main
+src-git passwall2 https://github.com/Openwrt-Passwall/openwrt-passwall2.git;main
+EOF
+
+cat feeds.conf.default >> /tmp/custom-feeds.conf
+mv /tmp/custom-feeds.conf feeds.conf.default
+
+echo "===== Final feeds.conf.default ====="
+cat feeds.conf.default
