@@ -18,3 +18,23 @@
 
 # Modify hostname
 #sed -i 's/OpenWrt/P3TERX-Router/g' package/base-files/files/bin/config_generate
+
+echo "===== Force official Nikki backend ====="
+
+# 删除 LEDE 默认 packages feed 创建的旧 Nikki 链接
+rm -f package/feeds/packages/nikki
+
+# 强制安装官方 Nikki 后端
+./scripts/feeds install -f -p nikki nikki
+
+echo "===== Nikki package source ====="
+find package/feeds -maxdepth 2 -name nikki \
+    -print -exec readlink -f {} \;
+
+if [ ! -f package/feeds/nikki/nikki/Makefile ]; then
+    echo "ERROR: Official Nikki backend was not installed."
+    exit 1
+fi
+
+grep -E 'PKG_NAME|PKG_VERSION|PKG_RELEASE|DEPENDS' \
+    package/feeds/nikki/nikki/Makefile
